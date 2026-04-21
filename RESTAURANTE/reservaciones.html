@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservaciones - Masala Palace</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="CSS/reservaciones.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">🪔 Masala Palace</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menú</a></li>
+        <li class="nav-item"><a class="nav-link active" href="reservaciones.html">Reservar</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        <li class="nav-item" id="nav-auth">
+          <a class="nav-link" href="login.html" style="color:var(--gold)!important">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Masala Palace · Reservaciones</div>
+  <h1>Tu mesa te<br><em>espera</em></h1>
+  <div id="user-badge">
+    <span class="dot"></span>
+    <span id="user-email-display"></span>
+  </div>
+</div>
+
+<!-- STEPPER -->
+<div class="stepper container" id="stepper-bar">
+  <div class="step active" id="step-1">
+    <div class="step-circle">1</div>
+    <div class="step-label">Detalles</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step-2">
+    <div class="step-circle">2</div>
+    <div class="step-label">Tu Mesa</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step" id="step-3">
+    <div class="step-circle">3</div>
+    <div class="step-label">Confirmar</div>
+  </div>
+</div>
+
+<!-- PANELS -->
+<div class="panels container" style="max-width:800px">
+
+  <!-- ── PANEL 1: datos ── -->
+  <div class="panel active" id="panel-1">
+    <div class="mp-card">
+      <h3>¿Cuándo y quiénes?</h3>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="mp-label">Nombre completo</label>
+          <input class="mp-input" type="text" id="nombre" placeholder="Tu nombre" required>
+        </div>
+        <div class="col-md-6">
+          <label class="mp-label">Correo electrónico</label>
+          <input class="mp-input" type="email" id="email" placeholder="Cargando sesión…" disabled>
+        </div>
+        <div class="col-md-6">
+          <label class="mp-label">Teléfono</label>
+          <input class="mp-input" type="tel" id="telefono" placeholder="+52 55 0000 0000" required>
+        </div>
+        <div class="col-md-6">
+          <label class="mp-label">Fecha y hora</label>
+          <input class="mp-input" type="datetime-local" id="fecha" required>
+        </div>
+        <div class="col-md-6">
+          <label class="mp-label">Número de personas</label>
+          <select class="mp-input" id="personas" required>
+            <option value="">Selecciona…</option>
+            <option value="1">1 persona</option>
+            <option value="2">2 personas</option>
+            <option value="3">3 personas</option>
+            <option value="4">4 personas</option>
+            <option value="5">5 personas</option>
+            <option value="6">6 personas</option>
+            <option value="7">7 personas</option>
+            <option value="8">8+ personas</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="mp-label">Notas especiales</label>
+          <input class="mp-input" type="text" id="notas" placeholder="Alergias, ocasión especial…">
+        </div>
+        <div class="col-12 d-flex justify-content-end mt-2">
+          <button class="btn-gold" onclick="nextStep(1)">
+            Elegir mesa &nbsp;<i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 2: mapa ── -->
+  <div class="panel" id="panel-2">
+    <div class="mp-card">
+      <h3>Elige tu lugar</h3>
+
+      <div class="map-wrapper">
+        <!-- TERRAZA -->
+        <div class="map-label-pill">🌿 Terraza Taj</div>
+        <div class="tables-grid" id="zone-terraza"></div>
+        <hr class="map-section-divider">
+        <!-- SALA -->
+        <div class="map-label-pill">🕌 Sala Principal</div>
+        <div class="tables-grid" id="zone-sala"></div>
+        <hr class="map-section-divider">
+        <!-- PRIVADO -->
+        <div class="map-label-pill">👑 Privado Maharaja</div>
+        <div class="tables-grid" id="zone-privado"></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot free"></div> Disponible</div>
+        <div class="legend-item"><div class="legend-dot selected"></div> Seleccionada</div>
+        <div class="legend-item"><div class="legend-dot occupied"></div> Ocupada</div>
+      </div>
+
+      <div id="selected-info"></div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn-outline-gold" onclick="goStep(1)">
+          <i class="fa fa-arrow-left"></i> &nbsp;Regresar
+        </button>
+        <button class="btn-gold" id="btn-next-2" onclick="nextStep(2)" disabled>
+          Revisar &nbsp;<i class="fa fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 3: resumen ── -->
+  <div class="panel" id="panel-3">
+    <div class="mp-card">
+      <h3>Confirma tu reservación</h3>
+      <div id="summary-content"></div>
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn-outline-gold" onclick="goStep(2)">
+          <i class="fa fa-arrow-left"></i> &nbsp;Editar
+        </button>
+        <button class="btn-gold" id="btn-confirm" onclick="confirmarReservacion()">
+          <i class="fa fa-check"></i> &nbsp;Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 4: éxito ── -->
+  <div class="panel" id="panel-4">
+    <div class="mp-card text-center" style="padding:3.5rem 2rem">
+      <div class="confirm-icon">🪔</div>
+      <h3 style="margin-bottom:.5rem">¡Reservación confirmada!</h3>
+      <p style="color:var(--muted);font-size:.92rem;margin-bottom:2rem">
+        Recibirás un correo en <span id="confirm-email" style="color:var(--gold-l)"></span>.<br>
+        Te esperamos con gusto en Masala Palace.
+      </p>
+      <a href="index.html" class="btn-gold">Volver al inicio</a>
+    </div>
+  </div>
+
+</div><!-- /panels -->
+
+<footer>
+  <p>&copy; 2026 Masala Palace · Todos los derechos reservados</p>
+</footer>
+
+<!-- SCRIPTS -->
+<script type="module" src="JS/firebase.js"></script>
+<script type="module" src="JS/reservations.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Session: auto-fill email -->
+<script type="module">
+  import { checkSession, logout as _logout } from './JS/auth.js';
+
+  checkSession(
+    (user) => {
+      // Badge en el header
+      document.getElementById('user-email-display').textContent = user.email;
+      document.getElementById('user-badge').style.display = 'inline-flex';
+
+      // Rellenar email desde la sesión (no editable)
+      const emailInput = document.getElementById('email');
+      emailInput.value = user.email;
+      // mantenemos disabled; el valor sí se envía porque lo tomamos por JS
+
+      // Pre-rellenar nombre si viene del proveedor OAuth
+      if (user.displayName) {
+        const nombreInput = document.getElementById('nombre');
+        if (!nombreInput.value) nombreInput.value = user.displayName;
+      }
+
+      // Navbar
+      document.getElementById('nav-auth').innerHTML = `
+        <span style="color:var(--gold);font-size:.82rem;letter-spacing:.06em;opacity:.9;margin-right:.6rem">
+          👤 ${user.email}
+        </span>
+        <button onclick="window.logout()"
+          style="background:transparent;border:1px solid var(--gold);color:var(--gold);
+                 padding:.3rem .9rem;border-radius:6px;font-size:.78rem;cursor:pointer;
+                 font-family:var(--ff-body);transition:background .2s"
+          onmouseover="this.style.background='rgba(201,147,58,.15)'"
+          onmouseout="this.style.background='transparent'">
+          Salir
+        </button>
+      `;
+    },
+    null  // reservations.js ya redirige si no hay sesión
+  );
+
+  window.logout = _logout;
+</script>
+
+<!-- Map & Stepper logic -->
+<script>
+/* ═══════════════ DATOS DE MESAS ═══════════════ */
+const TABLES = {
+  terraza: [
+    { id: 'T1', capacity: 2, occupied: false },
+    { id: 'T2', capacity: 2, occupied: true  },
+    { id: 'T3', capacity: 4, occupied: false },
+    { id: 'T4', capacity: 4, occupied: false },
+    { id: 'T5', capacity: 2, occupied: true  },
+  ],
+  sala: [
+    { id: 'S1', capacity: 4, occupied: false },
+    { id: 'S2', capacity: 4, occupied: false },
+    { id: 'S3', capacity: 6, occupied: true  },
+    { id: 'S4', capacity: 4, occupied: false },
+    { id: 'S5', capacity: 6, occupied: false },
+    { id: 'S6', capacity: 2, occupied: true  },
+    { id: 'S7', capacity: 4, occupied: false },
+  ],
+  privado: [
+    { id: 'P1', capacity: 8,  occupied: false },
+    { id: 'P2', capacity: 10, occupied: true  },
+    { id: 'P3', capacity: 8,  occupied: false },
+  ]
+};
+
+const ZONE_LABELS = {
+  terraza: 'Terraza Taj',
+  sala:    'Sala Principal',
+  privado: 'Privado Maharaja'
+};
+
+let selectedTable = null;
+
+/* ── Genera SVG de una mesa con sillas ── */
+function tableSVG(capacity, state) {
+  const palette = {
+    free:     { fill: 'rgba(201,147,58,.18)', stroke: '#c9933a',   chair: '#c9933a' },
+    selected: { fill: 'rgba(232,185,106,.28)', stroke: '#e8b96a',  chair: '#e8b96a' },
+    occupied: { fill: 'rgba(255,255,255,.04)', stroke: '#3a3027',  chair: '#3a3027' },
+  };
+  const p = palette[state];
+
+  const isLarge = capacity >= 6;
+  const tw = isLarge ? 80 : 60;
+  const th = isLarge ? 56 : 44;
+  const cx = tw / 2;
+  const svgW = tw + 30;
+  const svgH = th + 30;
+  const cw = 10, ch = 8, gp = 5;
+
+  const chairs = [];
+  const pushChair = (x, y, w, h) =>
+    chairs.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="${p.chair}" opacity=".85"/>`);
+
+  if (capacity >= 2) {
+    pushChair(cx - cw/2, gp,           cw, ch);          // top-center
+    pushChair(cx - cw/2, th + gp + ch, cw, ch);          // bottom-center
+  }
+  if (capacity >= 4) {
+    pushChair(gp,            th/2 - ch/2 + gp + ch, ch, cw); // left
+    pushChair(tw + gp + ch,  th/2 - ch/2 + gp + ch, ch, cw); // right
+  }
+  if (capacity >= 6) {
+    pushChair(cx - cw - 4, gp,            cw, ch);  // top-left
+    pushChair(cx + 4,      gp,            cw, ch);  // top-right
+    pushChair(cx - cw - 4, th + gp + ch,  cw, ch); // bottom-left
+    pushChair(cx + 4,      th + gp + ch,  cw, ch); // bottom-right
+  }
+
+  return `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(15,0)">
+      ${chairs.join('')}
+      <rect x="0" y="${gp + ch}" width="${tw}" height="${th}" rx="8"
+            fill="${p.fill}" stroke="${p.stroke}" stroke-width="1.5"/>
+    </g>
+  </svg>`;
+}
+
+/* ── Renderizar zonas ── */
+function renderTables() {
+  Object.entries(TABLES).forEach(([zone, tables]) => {
+    const container = document.getElementById(`zone-${zone}`);
+    container.innerHTML = '';
+
+    tables.forEach(t => {
+      const state = t.occupied
+        ? 'occupied'
+        : (selectedTable?.id === t.id ? 'selected' : 'free');
+
+      const el = document.createElement('div');
+      el.className = `resto-table ${state}`;
+
+      el.innerHTML = `
+        <div class="table-top">${tableSVG(t.capacity, state)}</div>
+        <div class="table-id">${t.id} · ${t.capacity}p</div>
+      `;
+
+      if (!t.occupied) {
+        el.addEventListener('click', () => selectTable(t, zone));
+      }
+
+      container.appendChild(el);
+    });
+  });
+}
+
+function selectTable(table, zone) {
+  selectedTable = { ...table, zone };
+  renderTables();
+
+  const info = document.getElementById('selected-info');
+  info.style.display = 'block';
+  info.innerHTML = `
+    <i class="fa fa-circle-check" style="margin-right:.4rem"></i>
+    <strong>Mesa ${table.id}</strong> seleccionada &nbsp;·&nbsp;
+    ${table.capacity} personas &nbsp;·&nbsp; ${ZONE_LABELS[zone]}
+  `;
+
+  document.getElementById('btn-next-2').disabled = false;
+}
+
+/* ═══════════════ STEPPER ═══════════════ */
+let currentStep = 1;
+
+function showPanel(n) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${n}`).classList.add('active');
+
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i + 1 < n)  s.classList.add('done');
+    if (i + 1 === n) s.classList.add('active');
+  });
+
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goStep(n) {
+  if (n >= currentStep) return;   // solo hacia atrás
+  showPanel(n);
+}
+
+function nextStep(from) {
+  if (from === 1) {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const fecha    = document.getElementById('fecha').value;
+    const personas = document.getElementById('personas').value;
+
+    if (!nombre || !telefono || !fecha || !personas) {
+      alert('Por favor completa todos los campos obligatorios.');
+      return;
+    }
+    showPanel(2);
+
+  } else if (from === 2) {
+    if (!selectedTable) { alert('Selecciona una mesa disponible.'); return; }
+    buildSummary();
+    showPanel(3);
+  }
+}
+
+/* ── Resumen ── */
+function buildSummary() {
+  const nombre   = document.getElementById('nombre').value;
+  const email    = document.getElementById('email').value;
+  const telefono = document.getElementById('telefono').value;
+  const fecha    = new Date(document.getElementById('fecha').value);
+  const personas = document.getElementById('personas').value;
+  const notas    = document.getElementById('notas').value || '—';
+  const fmt      = fecha.toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' });
+
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-row"><span class="lbl">Nombre</span><span class="val">${nombre}</span></div>
+    <div class="summary-row"><span class="lbl">Correo</span><span class="val">${email}</span></div>
+    <div class="summary-row"><span class="lbl">Teléfono</span><span class="val">${telefono}</span></div>
+    <div class="summary-row"><span class="lbl">Fecha</span><span class="val">${fmt}</span></div>
+    <div class="summary-row"><span class="lbl">Personas</span><span class="val">${personas}</span></div>
+    <div class="summary-row"><span class="lbl">Mesa</span>
+      <span class="val">Mesa ${selectedTable.id} · ${ZONE_LABELS[selectedTable.zone]}</span></div>
+    <div class="summary-row"><span class="lbl">Notas</span>
+      <span class="val" style="font-style:italic;font-size:.92rem">${notas}</span></div>
+  `;
+}
+
+/* ── Confirmar ── */
+async function confirmarReservacion() {
+  const btn = document.getElementById('btn-confirm');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> &nbsp;Guardando…';
+
+  const data = {
+    nombre:   document.getElementById('nombre').value,
+    email:    document.getElementById('email').value,
+    telefono: document.getElementById('telefono').value,
+    fecha:    document.getElementById('fecha').value,
+    personas: document.getElementById('personas').value,
+    area:     ZONE_LABELS[selectedTable.zone],
+    mesa:     selectedTable.id,
+    notas:    document.getElementById('notas').value || ''
+  };
+
+  try {
+    await saveReservation(data);   // window.saveReservation definida en reservations.js
+    document.getElementById('confirm-email').textContent = data.email;
+    document.getElementById('stepper-bar').style.display = 'none';
+    showPanel(4);
+  } catch(e) {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa fa-check"></i> &nbsp;Confirmar';
+  }
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const fechaInput = document.getElementById('fecha');
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  fechaInput.min = now.toISOString().slice(0, 16);
+
+  renderTables();
+});
+</script>
+
+</body>
+</html>
